@@ -82,25 +82,25 @@ public class CraftItemExcavator {
 		GoldExcavatorRecipe = new ShapedRecipe(GoldExcavator);
 		DiamondExcavatorRecipe = new ShapedRecipe(DiamondExcavator);
 
-		WoodExcavatorRecipe.shape(" l ", "lpl", " l ");
-		WoodExcavatorRecipe.setIngredient('l', Material.LOG);
-		WoodExcavatorRecipe.setIngredient('p', Material.WOOD_SPADE);
+		WoodExcavatorRecipe.shape(" m ", "mim", " m ");
+		WoodExcavatorRecipe.setIngredient('m', Material.LOG);
+		WoodExcavatorRecipe.setIngredient('i', Material.WOOD_SPADE);
 
-		StoneExcavatorRecipe.shape(" l ", "lpl", " l ");
-		StoneExcavatorRecipe.setIngredient('l', Material.STONE);
-		StoneExcavatorRecipe.setIngredient('p', Material.STONE_SPADE);
+		StoneExcavatorRecipe.shape(" m ", "mim", " m ");
+		StoneExcavatorRecipe.setIngredient('m', Material.STONE);
+		StoneExcavatorRecipe.setIngredient('i', Material.STONE_SPADE);
 
-		IronExcavatorRecipe.shape(" l ", "lpl", " l ");
-		IronExcavatorRecipe.setIngredient('l', Material.IRON_INGOT);
-		IronExcavatorRecipe.setIngredient('p', Material.IRON_SPADE);
+		IronExcavatorRecipe.shape(" m ", "mim", " m ");
+		IronExcavatorRecipe.setIngredient('m', Material.IRON_INGOT);
+		IronExcavatorRecipe.setIngredient('i', Material.IRON_SPADE);
 
-		GoldExcavatorRecipe.shape(" l ", "lpl", " l ");
-		GoldExcavatorRecipe.setIngredient('l', Material.GOLD_INGOT);
-		GoldExcavatorRecipe.setIngredient('p', Material.GOLD_SPADE);
+		GoldExcavatorRecipe.shape(" m ", "mim", " m ");
+		GoldExcavatorRecipe.setIngredient('m', Material.GOLD_INGOT);
+		GoldExcavatorRecipe.setIngredient('i', Material.GOLD_SPADE);
 
-		DiamondExcavatorRecipe.shape(" l ", "lpl", " l ");
-		DiamondExcavatorRecipe.setIngredient('l', Material.DIAMOND);
-		DiamondExcavatorRecipe.setIngredient('p', Material.DIAMOND_SPADE);
+		DiamondExcavatorRecipe.shape(" m ", "mim", " m ");
+		DiamondExcavatorRecipe.setIngredient('m', Material.DIAMOND);
+		DiamondExcavatorRecipe.setIngredient('i', Material.DIAMOND_SPADE);
 	}
 
 	// Register all created recipes into the game
