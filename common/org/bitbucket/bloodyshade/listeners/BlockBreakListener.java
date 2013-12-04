@@ -53,7 +53,7 @@ public class BlockBreakListener implements Listener {
 			if (event.getPlayer().isSneaking())
 				return;
 
-			if (Reference.MINABLE.contains(blockMaterial) || Reference.DIGABLE.contains(blockMaterial)) {
+			if (Reference.MINABLE.containsKey(blockMaterial) || Reference.DIGABLE.contains(blockMaterial)) {
 				String loreString = "";
 				boolean useHammer = false;
 				boolean useExcavator = false;
@@ -73,51 +73,13 @@ public class BlockBreakListener implements Listener {
 				if (!handItem.getItemMeta().getLore().contains(loreString))
 					return;
 
-				ArrayList<Block> blocks = new ArrayList<Block>();
-				World world = event.getPlayer().getWorld();
-
-				int x, y, z;
-				x = block.getX();
-				y = block.getY();
-				z = block.getZ();
-
-				// These check the block face from which the block is being broken in order to get the correct surrounding blocks
-				if (blockFace == BlockFace.UP || blockFace == BlockFace.DOWN) {
-					blocks.add(world.getBlockAt(x+1, y, z));
-					blocks.add(world.getBlockAt(x-1, y, z));
-					blocks.add(world.getBlockAt(x, y, z+1));
-					blocks.add(world.getBlockAt(x, y, z-1));
-					blocks.add(world.getBlockAt(x+1, y, z+1));
-					blocks.add(world.getBlockAt(x-1, y, z-1));
-					blocks.add(world.getBlockAt(x+1, y, z-1));
-					blocks.add(world.getBlockAt(x-1, y, z+1));
-				}
-				else if (blockFace == BlockFace.EAST || blockFace == BlockFace.WEST) {
-					blocks.add(world.getBlockAt(x, y, z+1));
-					blocks.add(world.getBlockAt(x, y, z-1));
-					blocks.add(world.getBlockAt(x, y+1, z));
-					blocks.add(world.getBlockAt(x, y-1, z));
-					blocks.add(world.getBlockAt(x, y+1, z+1));
-					blocks.add(world.getBlockAt(x, y-1, z-1));
-					blocks.add(world.getBlockAt(x, y-1, z+1));
-					blocks.add(world.getBlockAt(x, y+1, z-1));					
-				}
-				else if (blockFace == BlockFace.NORTH || blockFace == BlockFace.SOUTH) {
-					blocks.add(world.getBlockAt(x+1, y, z));
-					blocks.add(world.getBlockAt(x-1, y, z));
-					blocks.add(world.getBlockAt(x, y+1, z));
-					blocks.add(world.getBlockAt(x, y-1, z));
-					blocks.add(world.getBlockAt(x+1, y+1, z));
-					blocks.add(world.getBlockAt(x-1, y-1, z));
-					blocks.add(world.getBlockAt(x+1, y-1, z));
-					blocks.add(world.getBlockAt(x-1, y+1, z));
-				}
-
 				// Breaks surrounding blocks as long as they match the corresponding tool
-				for (Block e: blocks) {
+				for (Block e: getSurroundingBlocks(blockFace, block)) {
 					if (e != null) {
-						if ((Reference.MINABLE.contains(e.getType()) && useHammer) ||
-								(Reference.DIGABLE.contains(e.getType())) && useExcavator) {
+						if ((Reference.MINABLE.containsKey(e.getType()) && useHammer &&
+								(Reference.MINABLE.get(e.getType()) == null ||
+									Reference.MINABLE.get(e.getType()).contains(handItem.getType()))) ||
+								(Reference.DIGABLE.contains(e.getType()) && useExcavator)) {
 							e.breakNaturally(handItem);
 						}
 					}
@@ -129,10 +91,12 @@ public class BlockBreakListener implements Listener {
 				short curDur = handItem.getDurability();
 				short maxDur = handItem.getType().getMaxDurability();
 
-				for (Block e: blocks) {
+				for (Block e: getSurroundingBlocks(blockFace, block)) {
 					if (e != null) {
-						if ((Reference.MINABLE.contains(e.getType()) && useHammer) ||
-								(Reference.DIGABLE.contains(e.getType())) && useExcavator) {
+						if ((Reference.MINABLE.containsKey(e.getType()) && useHammer &&
+								(Reference.MINABLE.get(e.getType()) == null ||
+									Reference.MINABLE.get(e.getType()).contains(handItem.getType()))) ||
+								(Reference.DIGABLE.contains(e.getType()) && useExcavator)) {
 							if (curDur++ < maxDur) {
 								e.breakNaturally(handItem);
 								handItem.setDurability(curDur);
@@ -145,5 +109,56 @@ public class BlockBreakListener implements Listener {
 */
 			}
 		}
+	}
+
+	public ArrayList<Block> getSurroundingBlocks(BlockFace blockFace, Block targetBlock) {
+		ArrayList<Block> blocks = new ArrayList<Block>();
+		World world = targetBlock.getWorld();
+
+		int x, y, z;
+		x = targetBlock.getX();
+		y = targetBlock.getY();
+		z = targetBlock.getZ();
+
+		// These check the block face from which the block is being broken in order to get the correct surrounding blocks
+		switch(blockFace) {
+			case UP:
+			case DOWN:
+				blocks.add(world.getBlockAt(x+1, y, z));
+				blocks.add(world.getBlockAt(x-1, y, z));
+				blocks.add(world.getBlockAt(x, y, z+1));
+				blocks.add(world.getBlockAt(x, y, z-1));
+				blocks.add(world.getBlockAt(x+1, y, z+1));
+				blocks.add(world.getBlockAt(x-1, y, z-1));
+				blocks.add(world.getBlockAt(x+1, y, z-1));
+				blocks.add(world.getBlockAt(x-1, y, z+1));
+				break;
+			case EAST:
+			case WEST:
+				blocks.add(world.getBlockAt(x, y, z+1));
+				blocks.add(world.getBlockAt(x, y, z-1));
+				blocks.add(world.getBlockAt(x, y+1, z));
+				blocks.add(world.getBlockAt(x, y-1, z));
+				blocks.add(world.getBlockAt(x, y+1, z+1));
+				blocks.add(world.getBlockAt(x, y-1, z-1));
+				blocks.add(world.getBlockAt(x, y-1, z+1));
+				blocks.add(world.getBlockAt(x, y+1, z-1));
+				break;
+			case NORTH:
+			case SOUTH:
+				blocks.add(world.getBlockAt(x+1, y, z));
+				blocks.add(world.getBlockAt(x-1, y, z));
+				blocks.add(world.getBlockAt(x, y+1, z));
+				blocks.add(world.getBlockAt(x, y-1, z));
+				blocks.add(world.getBlockAt(x+1, y+1, z));
+				blocks.add(world.getBlockAt(x-1, y-1, z));
+				blocks.add(world.getBlockAt(x+1, y-1, z));
+				blocks.add(world.getBlockAt(x-1, y+1, z));
+				break;
+			default:
+				return blocks;
+		}
+
+		return blocks;
 	}
 }

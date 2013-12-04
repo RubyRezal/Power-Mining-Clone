@@ -82,25 +82,25 @@ public class CraftItemHammer {
 		GoldHammerRecipe = new ShapedRecipe(GoldHammer);
 		DiamondHammerRecipe = new ShapedRecipe(DiamondHammer);
 
-		WoodHammerRecipe.shape(" l ", "lpl", " l ");
-		WoodHammerRecipe.setIngredient('l', Material.LOG);
-		WoodHammerRecipe.setIngredient('p', Material.WOOD_PICKAXE);
+		WoodHammerRecipe.shape(" m ", "mim", " m ");
+		WoodHammerRecipe.setIngredient('m', Material.LOG);
+		WoodHammerRecipe.setIngredient('i', Material.WOOD_PICKAXE);
 
-		StoneHammerRecipe.shape(" l ", "lpl", " l ");
-		StoneHammerRecipe.setIngredient('l', Material.STONE);
-		StoneHammerRecipe.setIngredient('p', Material.STONE_PICKAXE);
+		StoneHammerRecipe.shape(" m ", "mim", " m ");
+		StoneHammerRecipe.setIngredient('m', Material.STONE);
+		StoneHammerRecipe.setIngredient('i', Material.STONE_PICKAXE);
 
-		IronHammerRecipe.shape(" l ", "lpl", " l ");
-		IronHammerRecipe.setIngredient('l', Material.IRON_INGOT);
-		IronHammerRecipe.setIngredient('p', Material.IRON_PICKAXE);
+		IronHammerRecipe.shape(" m ", "mim", " m ");
+		IronHammerRecipe.setIngredient('m', Material.IRON_INGOT);
+		IronHammerRecipe.setIngredient('i', Material.IRON_PICKAXE);
 
-		GoldHammerRecipe.shape(" l ", "lpl", " l ");
-		GoldHammerRecipe.setIngredient('l', Material.GOLD_INGOT);
-		GoldHammerRecipe.setIngredient('p', Material.GOLD_PICKAXE);
+		GoldHammerRecipe.shape(" m ", "mim", " m ");
+		GoldHammerRecipe.setIngredient('m', Material.GOLD_INGOT);
+		GoldHammerRecipe.setIngredient('i', Material.GOLD_PICKAXE);
 
-		DiamondHammerRecipe.shape(" l ", "lpl", " l ");
-		DiamondHammerRecipe.setIngredient('l', Material.DIAMOND);
-		DiamondHammerRecipe.setIngredient('p', Material.DIAMOND_PICKAXE);
+		DiamondHammerRecipe.shape(" m ", "mim", " m ");
+		DiamondHammerRecipe.setIngredient('m', Material.DIAMOND);
+		DiamondHammerRecipe.setIngredient('i', Material.DIAMOND_PICKAXE);
 	}
 
 	// Register all created recipes into the game

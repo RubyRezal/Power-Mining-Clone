@@ -12,35 +12,51 @@
 
 package org.bitbucket.bloodyshade.lib;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Material;
 
 public class Reference {
-	public static List<Material> MINABLE = Arrays.asList(
-		Material.STONE,
-		Material.COBBLESTONE,
-		Material.OBSIDIAN,
-		Material.MOSSY_COBBLESTONE,
-		Material.COAL_ORE,
-		Material.REDSTONE_ORE,
-		Material.GLOWING_REDSTONE_ORE,
-		Material.LAPIS_ORE,
-		Material.IRON_ORE,
-		Material.GOLD_ORE,
-		Material.DIAMOND_ORE,
-		Material.EMERALD_ORE,
-		Material.SANDSTONE,
-		Material.ENDER_STONE,
-		Material.NETHERRACK,
-		Material.NETHER_BRICK,
-		Material.GLOWSTONE,
-		Material.QUARTZ_ORE,
-		Material.STAINED_CLAY,
-		Material.HARD_CLAY
-		//Material.PACKED_ICE
-	);
+	public static HashMap<Material, ArrayList<Material>> MINABLE;
+	static {
+		// Creates whitelist of Pickaxes per Material
+		ArrayList<Material> tempPick = new ArrayList<Material>();
+
+		// Minable by all pickaxes
+		MINABLE = new HashMap<Material, ArrayList<Material>>();
+		MINABLE.put(Material.COBBLESTONE, null);
+		MINABLE.put(Material.STONE, null);
+		MINABLE.put(Material.BRICK, null);
+		MINABLE.put(Material.MOSSY_COBBLESTONE, null);
+		MINABLE.put(Material.COAL_ORE, null);
+		MINABLE.put(Material.SANDSTONE, null);
+		MINABLE.put(Material.ENDER_STONE, null);
+		MINABLE.put(Material.NETHERRACK, null);
+		MINABLE.put(Material.NETHER_BRICK, null);
+		MINABLE.put(Material.QUARTZ_ORE, null);
+		MINABLE.put(Material.STAINED_CLAY, null);
+		MINABLE.put(Material.HARD_CLAY, null);
+
+		// Minable by diamond pickaxes
+		tempPick.add(Material.DIAMOND_PICKAXE);
+		MINABLE.put(Material.OBSIDIAN, tempPick);
+
+		// Minable by iron and diamond pickaxes
+		tempPick.add(Material.IRON_PICKAXE);
+		MINABLE.put(Material.REDSTONE_ORE, tempPick);
+		MINABLE.put(Material.GLOWING_REDSTONE_ORE, tempPick);
+		MINABLE.put(Material.GOLD_ORE, tempPick);
+		MINABLE.put(Material.DIAMOND_ORE, tempPick);
+		MINABLE.put(Material.EMERALD_ORE, tempPick);
+
+		// Minable by stone, iron and diamond pickaxes
+		tempPick.add(Material.STONE_PICKAXE);
+		MINABLE.put(Material.LAPIS_ORE, tempPick);
+		MINABLE.put(Material.IRON_ORE, tempPick);
+	};
 
 	public static List<Material> DIGABLE = Arrays.asList(
 		Material.GRASS,
@@ -51,7 +67,8 @@ public class Reference {
 		Material.SOUL_SAND,
 		Material.SNOW_BLOCK,
 		Material.SNOW,
-		Material.MYCEL
+		Material.MYCEL,
+		Material.SOIL
 	);
 
 	public static List<Material> PICKAXES = Arrays.asList(
