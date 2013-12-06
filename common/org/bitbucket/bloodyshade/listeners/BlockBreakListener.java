@@ -13,6 +13,7 @@
 package org.bitbucket.bloodyshade.listeners;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.bitbucket.bloodyshade.PowerMining;
 import org.bitbucket.bloodyshade.crafting.CraftItemExcavator;
@@ -73,40 +74,26 @@ public class BlockBreakListener implements Listener {
 				if (!handItem.getItemMeta().getLore().contains(loreString))
 					return;
 
-				// Breaks surrounding blocks as long as they match the corresponding tool
-				for (Block e: getSurroundingBlocks(blockFace, block)) {
-					if (e != null) {
-						if ((Reference.MINABLE.containsKey(e.getType()) && useHammer &&
-								(Reference.MINABLE.get(e.getType()) == null ||
-									Reference.MINABLE.get(e.getType()).contains(handItem.getType()))) ||
-								(Reference.DIGABLE.contains(e.getType()) && useExcavator)) {
-							e.breakNaturally(handItem);
-						}
-					}
-				}
-
-				// This deals durability damage for each broken block
-				// Disabled since it feels a bit pointless
-/*
+				boolean useDurabilityPerBlock = plugin.getConfig().getBoolean("useDurabilityPerBlock"); 
 				short curDur = handItem.getDurability();
 				short maxDur = handItem.getType().getMaxDurability();
 
+				// Breaks surrounding blocks as long as they match the corresponding tool
 				for (Block e: getSurroundingBlocks(blockFace, block)) {
-					if (e != null) {
-						if ((Reference.MINABLE.containsKey(e.getType()) && useHammer &&
-								(Reference.MINABLE.get(e.getType()) == null ||
-									Reference.MINABLE.get(e.getType()).contains(handItem.getType()))) ||
-								(Reference.DIGABLE.contains(e.getType()) && useExcavator)) {
-							if (curDur++ < maxDur) {
-								e.breakNaturally(handItem);
+					if ((Reference.MINABLE.containsKey(e.getType()) && useHammer &&
+							(Reference.MINABLE.get(e.getType()) == null ||
+								Reference.MINABLE.get(e.getType()).contains(handItem.getType()))) ||
+							(Reference.DIGABLE.contains(e.getType()) && useExcavator)) {
+						if (useDurabilityPerBlock) {
+							if (curDur++ < maxDur)
 								handItem.setDurability(curDur);
-							}
 							else
 								break;
 						}
+
+						e.breakNaturally(handItem);
 					}
 				}
-*/
 			}
 		}
 	}
@@ -120,7 +107,7 @@ public class BlockBreakListener implements Listener {
 		y = targetBlock.getY();
 		z = targetBlock.getZ();
 
-		// These check the block face from which the block is being broken in order to get the correct surrounding blocks
+		// Check the block face from which the block is being broken in order to get the correct surrounding blocks
 		switch(blockFace) {
 			case UP:
 			case DOWN:
@@ -156,9 +143,11 @@ public class BlockBreakListener implements Listener {
 				blocks.add(world.getBlockAt(x-1, y+1, z));
 				break;
 			default:
-				return blocks;
+				break;
 		}
 
+		// Trim the nulls from the list
+		blocks.removeAll(Collections.singleton(null));
 		return blocks;
 	}
 }
