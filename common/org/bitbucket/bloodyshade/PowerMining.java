@@ -31,6 +31,9 @@ public final class PowerMining extends JavaPlugin {
 		handlerPlayerInteract.Init(this);
 		handlerBlockBreak.Init(this);
 		handlerCraftItem.Init(this);
+
+		this.saveDefaultConfig();
+
 		getLogger().info("PowerMining plugin was enabled.");
     }
  
