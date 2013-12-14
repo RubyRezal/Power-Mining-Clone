@@ -31,15 +31,22 @@ import org.bukkit.inventory.ItemStack;
 
 public class BlockBreakListener implements Listener {
 	public PowerMining plugin;
+	public boolean useDurabilityPerBlock;
 
 	public BlockBreakListener(PowerMining plugin) {
 		this.plugin = plugin;
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+
+		useDurabilityPerBlock = plugin.getConfig().getBoolean("useDurabilityPerBlock");
 	}
 
 	@EventHandler(priority = EventPriority.LOW)
 	public void checkToolAndBreakBlocks(BlockBreakEvent event) {
 		if (event.getPlayer() != null) {
+			// If player is sneaking, we want the tool to act like a normal pickaxe/shovel
+			if (event.getPlayer().isSneaking())
+				return;
+
 			Block block = event.getBlock();
 			ItemStack handItem = event.getPlayer().getItemInHand();
 			String playerName = event.getPlayer().getName();
@@ -49,10 +56,6 @@ public class BlockBreakListener implements Listener {
 
 			PlayerInteractListener pil = plugin.getPlayerInteractHandler().getListener();
 			BlockFace blockFace = pil.getBlockFacebyPlayerName(playerName);
-
-			// If player is sneaking, we want the tool to act like a normal pickaxe/shovel
-			if (event.getPlayer().isSneaking())
-				return;
 
 			if (Reference.MINABLE.containsKey(blockMaterial) || Reference.DIGABLE.contains(blockMaterial)) {
 				String loreString = "";
@@ -74,7 +77,6 @@ public class BlockBreakListener implements Listener {
 				if (!handItem.getItemMeta().getLore().contains(loreString))
 					return;
 
-				boolean useDurabilityPerBlock = plugin.getConfig().getBoolean("useDurabilityPerBlock"); 
 				short curDur = handItem.getDurability();
 				short maxDur = handItem.getType().getMaxDurability();
 

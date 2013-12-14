@@ -15,17 +15,23 @@ package org.bitbucket.bloodyshade.handlers;
 import org.bitbucket.bloodyshade.PowerMining;
 import org.bitbucket.bloodyshade.crafting.CraftItemExcavator;
 import org.bitbucket.bloodyshade.crafting.CraftItemHammer;
+import org.bitbucket.bloodyshade.listeners.CraftItemListener;
 
 public class CraftItemHandler {
 	public CraftItemHandler() {};
 	public CraftItemHammer HammerClass;
 	public CraftItemExcavator ExcavatorClass;
+	public CraftItemListener listener;
 
 	public void Init(PowerMining plugin) {
 		HammerClass = new CraftItemHammer(plugin);
 		ExcavatorClass = new CraftItemExcavator(plugin);
+		listener = new CraftItemListener(plugin);
 	}
 
+	public CraftItemListener getListener() {
+		return listener;
+	}
 	public CraftItemHammer getHammerClass() {
 		return HammerClass;
 	}

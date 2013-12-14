@@ -36,7 +36,7 @@ public final class PowerMining extends JavaPlugin {
 
 		getLogger().info("PowerMining plugin was enabled.");
     }
- 
+
 	@Override
 	public void onDisable() {
 		getLogger().info("PowerMining plugin was disabled.");
