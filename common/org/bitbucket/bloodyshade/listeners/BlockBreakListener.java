@@ -14,6 +14,10 @@ package org.bitbucket.bloodyshade.listeners;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+
+import me.ryanhamshire.GriefPrevention.Claim;
+import me.ryanhamshire.GriefPrevention.GriefPrevention;
 
 import org.bitbucket.bloodyshade.PowerMining;
 import org.bitbucket.bloodyshade.crafting.CraftItemExcavator;
@@ -29,6 +33,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+
 public class BlockBreakListener implements Listener {
 	public PowerMining plugin;
 	public boolean useDurabilityPerBlock;
@@ -42,8 +48,8 @@ public class BlockBreakListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOW)
 	public void checkToolAndBreakBlocks(BlockBreakEvent event) {
-		if (event.getPlayer() != null) {
-			// If player is sneaking, we want the tool to act like a normal pickaxe/shovel
+		if (!event.isCancelled() && event.getPlayer() != null) {
+			// If the player is sneaking, we want the tool to act like a normal pickaxe/shovel
 			if (event.getPlayer().isSneaking())
 				return;
 
@@ -74,11 +80,15 @@ public class BlockBreakListener implements Listener {
 					return;
 				}
 
-				if (!handItem.getItemMeta().getLore().contains(loreString))
+				List<String> lore = handItem.getItemMeta().getLore();
+				if (lore == null || !lore.contains(loreString))
 					return;
 
 				short curDur = handItem.getDurability();
 				short maxDur = handItem.getType().getMaxDurability();
+
+				WorldGuardPlugin wg = plugin.getWorldGuard();
+				GriefPrevention gp = plugin.getGriefPrevention();
 
 				// Breaks surrounding blocks as long as they match the corresponding tool
 				for (Block e: getSurroundingBlocks(blockFace, block)) {
@@ -86,6 +96,17 @@ public class BlockBreakListener implements Listener {
 							(Reference.MINABLE.get(e.getType()) == null ||
 								Reference.MINABLE.get(e.getType()).contains(handItem.getType()))) ||
 							(Reference.DIGABLE.contains(e.getType()) && useExcavator)) {
+
+						if ((wg != null && (wg instanceof WorldGuardPlugin)) && !wg.canBuild(event.getPlayer(), e.getLocation()))
+							continue;
+
+						if (gp != null && (gp instanceof GriefPrevention)) {
+							Claim claim = GriefPrevention.instance.dataStore.getClaimAt(e.getLocation(), true);
+
+							if (claim != null && claim.allowBreak(event.getPlayer(), e) != null)
+								continue;
+						}
+
 						if (useDurabilityPerBlock) {
 							if (curDur++ < maxDur)
 								handItem.setDurability(curDur);
