@@ -12,15 +12,22 @@
 
 package org.bitbucket.bloodyshade;
 
+import me.ryanhamshire.GriefPrevention.GriefPrevention;
+
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bitbucket.bloodyshade.handlers.BlockBreakHandler;
 import org.bitbucket.bloodyshade.handlers.CraftItemHandler;
 import org.bitbucket.bloodyshade.handlers.PlayerInteractHandler;
 
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+
 public final class PowerMining extends JavaPlugin {
 	PlayerInteractHandler handlerPlayerInteract;
 	BlockBreakHandler handlerBlockBreak;
 	CraftItemHandler handlerCraftItem;
+	Plugin worldguard;
+	Plugin griefprevention;
 
 	@Override
 	public void onEnable(){
@@ -32,6 +39,8 @@ public final class PowerMining extends JavaPlugin {
 		handlerBlockBreak.Init(this);
 		handlerCraftItem.Init(this);
 
+		worldguard = getServer().getPluginManager().getPlugin("WorldGuard");
+		griefprevention = getServer().getPluginManager().getPlugin("GriefPrevention");
 		this.saveDefaultConfig();
 
 		getLogger().info("PowerMining plugin was enabled.");
@@ -52,5 +61,13 @@ public final class PowerMining extends JavaPlugin {
 
 	public CraftItemHandler getCraftItemHandler() {
 		return handlerCraftItem;
+	}
+
+	public WorldGuardPlugin getWorldGuard() {
+		return (WorldGuardPlugin) worldguard;
+	}
+
+	public GriefPrevention getGriefPrevention() {
+		return (GriefPrevention) griefprevention;
 	}
 }
