@@ -19,7 +19,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bitbucket.bloodyshade.handlers.BlockBreakHandler;
 import org.bitbucket.bloodyshade.handlers.CraftItemHandler;
 import org.bitbucket.bloodyshade.handlers.PlayerInteractHandler;
-
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public final class PowerMining extends JavaPlugin {

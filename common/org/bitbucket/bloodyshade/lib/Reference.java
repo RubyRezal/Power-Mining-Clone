@@ -39,6 +39,7 @@ public class Reference {
 		MINABLE.put(Material.QUARTZ_ORE, null);
 		MINABLE.put(Material.STAINED_CLAY, null);
 		MINABLE.put(Material.HARD_CLAY, null);
+		MINABLE.put(Material.GLOWSTONE, null);
 
 		// Minable by diamond pickaxes
 		tempPick.add(Material.DIAMOND_PICKAXE);
@@ -68,8 +69,53 @@ public class Reference {
 		Material.SNOW_BLOCK,
 		Material.SNOW,
 		Material.MYCEL,
-		Material.SOIL
+		Material.SOIL,
+		Material.GLOWSTONE
 	);
+
+	public static List<Material> MINEABLE_SILKTOUCH = Arrays.asList(
+		Material.STONE,
+		Material.BRICK,
+		Material.COAL_ORE,
+		Material.REDSTONE_ORE,
+		Material.GLOWING_REDSTONE_ORE,
+		Material.LAPIS_ORE,
+		Material.DIAMOND_ORE,
+		Material.EMERALD_ORE,
+		Material.ICE,
+		Material.QUARTZ_ORE,
+		Material.GLOWSTONE
+	);
+
+	public static List<Material> DIGABLE_SILKTOUCH = Arrays.asList(
+		Material.GRASS,
+		Material.CLAY,
+		Material.SNOW_BLOCK,
+		Material.MYCEL,
+		Material.GLOWSTONE
+	);
+
+	public static HashMap<Material, Material> MINEABLE_FORTUNE;
+	static {
+		MINEABLE_FORTUNE = new HashMap<Material, Material>();
+
+		MINEABLE_FORTUNE.put(Material.COAL_ORE, Material.COAL);
+		MINEABLE_FORTUNE.put(Material.REDSTONE_ORE, Material.REDSTONE);
+		MINEABLE_FORTUNE.put(Material.GLOWING_REDSTONE_ORE, Material.REDSTONE);
+		MINEABLE_FORTUNE.put(Material.LAPIS_ORE, Material.INK_SACK);
+		MINEABLE_FORTUNE.put(Material.DIAMOND_ORE, Material.DIAMOND);
+		MINEABLE_FORTUNE.put(Material.EMERALD_ORE, Material.EMERALD);
+		MINEABLE_FORTUNE.put(Material.QUARTZ_ORE, Material.QUARTZ);
+		MINEABLE_FORTUNE.put(Material.GLOWSTONE, Material.GLOWSTONE_DUST);
+	};
+
+	public static HashMap<Material, Material> DIGABLE_FORTUNE;
+	static {
+		DIGABLE_FORTUNE = new HashMap<Material, Material>();
+
+		DIGABLE_FORTUNE.put(Material.GRAVEL, Material.FLINT);
+		DIGABLE_FORTUNE.put(Material.GLOWSTONE, Material.GLOWSTONE_DUST);
+	};
 
 	public static List<Material> PICKAXES = Arrays.asList(
 		Material.WOOD_PICKAXE,

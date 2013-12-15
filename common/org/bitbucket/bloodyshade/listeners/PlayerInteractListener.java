@@ -31,7 +31,7 @@ public class PlayerInteractListener implements Listener {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
-	@EventHandler(priority = EventPriority.LOW)
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void saveBlockFace(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		BlockFace bf = event.getBlockFace();
