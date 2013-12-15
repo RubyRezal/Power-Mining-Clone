@@ -1,5 +1,7 @@
 package org.bitbucket.bloodyshade.listeners;
 
+import java.util.List;
+
 import org.bitbucket.bloodyshade.PowerMining;
 import org.bitbucket.bloodyshade.crafting.CraftItemExcavator;
 import org.bitbucket.bloodyshade.crafting.CraftItemHammer;
@@ -19,19 +21,20 @@ public class CraftItemListener implements Listener {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
-	@EventHandler(priority = EventPriority.LOW)
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void canCraft(CraftItemEvent event) {
 		boolean isCustom = false;
 
 		ItemStack resultItem = event.getRecipe().getResult();
+		List<String> lore = resultItem.getItemMeta().getLore();
 
 		if (Reference.PICKAXES.contains(resultItem.getType())) {
-			if (resultItem.getItemMeta().getLore().contains(CraftItemHammer.loreString)) {
+			if (lore != null && lore.contains(CraftItemHammer.loreString)) {
 				isCustom = true;
 			}
 		}
 		else if (Reference.SPADES.contains(resultItem.getType())) {
-			if (resultItem.getItemMeta().getLore().contains(CraftItemExcavator.loreString)) {
+			if (lore != null && lore.contains(CraftItemExcavator.loreString)) {
 				isCustom = true;
 			}
 		}
