@@ -75,7 +75,6 @@ public class Reference {
 
 	public static List<Material> MINEABLE_SILKTOUCH = Arrays.asList(
 		Material.STONE,
-		Material.BRICK,
 		Material.COAL_ORE,
 		Material.REDSTONE_ORE,
 		Material.GLOWING_REDSTONE_ORE,
