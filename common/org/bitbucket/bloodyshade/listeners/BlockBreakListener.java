@@ -1,13 +1,13 @@
 /*
  * This piece of software is part of the PowerMining Bukkit Plugin
  * Author: BloodyShade (dev.bukkit.org/profiles/bloodyshade)
- * 
+ *
  * Licensed under the LGPL v3
  * Further information please refer to the included lgpl-3.0.txt or the gnu website (http://www.gnu.org/licenses/lgpl)
  */
 
 /*
- * This class is responsible for handling the actual mining when using a Hammer/Excavator 
+ * This class is responsible for handling the actual mining when using a Hammer/Excavator
  */
 
 package org.bitbucket.bloodyshade.listeners;
@@ -60,13 +60,17 @@ public class BlockBreakListener implements Listener {
 			if (event.getPlayer().isSneaking())
 				return;
 
+			// If the player does not have permission to use the tool, acts like a normal pickaxe/shovel
+			if (!event.getPlayer().hasPermission("powermining.use"))
+				return;
+
 			Block block = event.getBlock();
 			ItemStack handItem = event.getPlayer().getItemInHand();
 			String playerName = event.getPlayer().getName();
 
 			Material blockType = block.getType();
 			Material handItemType = handItem.getType();
-			
+
 			PlayerInteractListener pil = plugin.getPlayerInteractHandler().getListener();
 			BlockFace blockFace = pil.getBlockFacebyPlayerName(playerName);
 

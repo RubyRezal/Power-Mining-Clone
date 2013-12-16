@@ -12,3 +12,6 @@ permissions:
     powermining.craft:
         description: Allows players to craft the Hammer and Excavator tools
         default: true
+    powermining.use:
+        description: Allows players to use the Hammer and Excavator tools
+        default: true
