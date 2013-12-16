@@ -103,7 +103,7 @@ public class CraftItemHammer {
 		DiamondHammerRecipe.setIngredient('i', Material.DIAMOND_PICKAXE);
 	}
 
-	// Register all created recipes into the game
+	// Registers all created recipes into the game
 	public void registerRecipes() {
 		plugin.getServer().addRecipe(WoodHammerRecipe);
 		plugin.getServer().addRecipe(StoneHammerRecipe);

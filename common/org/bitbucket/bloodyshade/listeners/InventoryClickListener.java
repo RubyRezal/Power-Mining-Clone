@@ -12,14 +12,10 @@
 
 package org.bitbucket.bloodyshade.listeners;
 
-import java.util.List;
-
 import org.bitbucket.bloodyshade.PowerMining;
-import org.bitbucket.bloodyshade.crafting.CraftItemExcavator;
-import org.bitbucket.bloodyshade.crafting.CraftItemHammer;
-import org.bitbucket.bloodyshade.lib.Reference;
+import org.bitbucket.bloodyshade.lib.PowerUtils;
 import org.bukkit.Material;
-import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -39,8 +35,6 @@ public class InventoryClickListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void canEnchant(InventoryClickEvent event) {
-		boolean canEnchant = false;
-
 		// Ignore the event in case this is not an Anvil
 		if (!(event.getInventory() instanceof AnvilInventory))
 			return;
@@ -49,94 +43,41 @@ public class InventoryClickListener implements Listener {
 		if (event.getSlotType() != SlotType.RESULT)
 			return;
 
-		HumanEntity player = event.getWhoClicked();
 		ItemStack item = event.getInventory().getItem(0);
+		ItemStack item2 = event.getInventory().getItem(1);
 
-		if (item == null || !item.hasItemMeta())
+		// Ignore event if the first item is not a power tool
+		if (!PowerUtils.isPowerTool(item))
 			return;
 
-		List<String> lore = item.getItemMeta().getLore();
-
-		// If the item has no lore, it can't be one of the power tools
-		if (lore == null)
+		if (item2 == null)
 			return;
 
-		if (Reference.PICKAXES.contains(item.getType()) || Reference.SPADES.contains(item.getType())) {
-			if (lore.contains(CraftItemHammer.loreString) || lore.contains(CraftItemExcavator.loreString)) {
-				ItemStack slot2 = event.getInventory().getItem(1);
+		// If this is not an enchanted book we need to check if it another power tool or allowed ingot
+		if (item2.getType() != Material.ENCHANTED_BOOK) {
+			// If the second item is an allowed ingot, let it repair
+			switch(item2.getType()) {
+			case IRON_INGOT:
+			case GOLD_INGOT:
+			case DIAMOND:
+				return;
+			default:
+				break;
+			}
 
-				if (slot2 == null)
+			// Check if the second item is a power tool
+			if (PowerUtils.isPowerTool(item2)) {
+				// Second item is not enchanted, let it repair
+				if (item.getEnchantments().isEmpty())
 					return;
-
-				// If this is not a book we need to check if it's another power tool, else they can combine
-				if (slot2.getType() != Material.ENCHANTED_BOOK &&
-						(Reference.PICKAXES.contains(slot2.getType()) || Reference.SPADES.contains(slot2.getType())) &&
-						(!item.getEnchantments().isEmpty() && !slot2.getEnchantments().isEmpty())) {
-						lore.clear();
-						lore = slot2.getItemMeta().getLore();
-
-						if (lore == null || (!lore.contains(CraftItemHammer.loreString) && !lore.contains(CraftItemExcavator.loreString)))
-							return;
-				}
-
-				switch (item.getType()) {
-					case WOOD_PICKAXE:
-						if (player.hasPermission("powermining.enchant.hammer.wood"))
-							canEnchant = true;
-
-						break;
-					case STONE_PICKAXE:
-						if (player.hasPermission("powermining.enchant.hammer.stone"))
-							canEnchant = true;
-
-						break;
-					case IRON_PICKAXE:
-						if (player.hasPermission("powermining.enchant.hammer.iron"))
-							canEnchant = true;
-
-						break;
-					case GOLD_PICKAXE:
-						if (player.hasPermission("powermining.enchant.hammer.gold"))
-							canEnchant = true;
-
-						break;
-					case DIAMOND_PICKAXE:
-						if (player.hasPermission("powermining.enchant.hammer.diamond"))
-							canEnchant = true;
-
-						break;
-					case WOOD_SPADE:
-						if (player.hasPermission("powermining.enchant.excavator.wood"))
-							canEnchant = true;
-
-						break;
-					case STONE_SPADE:
-						if (player.hasPermission("powermining.enchant.excavator.stone"))
-							canEnchant = true;
-
-						break;
-					case IRON_SPADE:
-						if (player.hasPermission("powermining.enchant.excavator.iron"))
-							canEnchant = true;
-
-						break;
-					case GOLD_SPADE:
-						if (player.hasPermission("powermining.enchant.excavator.gold"))
-							canEnchant = true;
-
-						break;
-					case DIAMOND_SPADE:
-						if (player.hasPermission("powermining.enchant.excavator.diamond"))
-							canEnchant = true;
-
-						break;
-					default:
-						break;
-				}
+			}
+			else {
+				event.setCancelled(true);
+				return;
 			}
 		}
 
-		if (!canEnchant)
+		if (!PowerUtils.checkEnchantPermission((Player) event.getWhoClicked(), item.getType()))
 			event.setCancelled(true);
 	}
 }

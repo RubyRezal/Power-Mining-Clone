@@ -103,7 +103,7 @@ public class CraftItemExcavator {
 		DiamondExcavatorRecipe.setIngredient('i', Material.DIAMOND_SPADE);
 	}
 
-	// Register all created recipes into the game
+	// Registers all created recipes into the game
 	public void registerRecipes() {
 		plugin.getServer().addRecipe(WoodExcavatorRecipe);
 		plugin.getServer().addRecipe(StoneExcavatorRecipe);

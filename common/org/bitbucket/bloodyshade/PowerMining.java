@@ -80,6 +80,10 @@ public final class PowerMining extends JavaPlugin {
 		return handlerEnchantItem;
 	}
 
+	public InventoryClickHandler getInventoryClickHandler() {
+		return handlerInventoryClick;
+	}
+
 	public WorldGuardPlugin getWorldGuard() {
 		return (WorldGuardPlugin) worldguard;
 	}
