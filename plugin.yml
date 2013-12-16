@@ -9,6 +9,7 @@ permissions:
         description: Grants all permissions
         children:
             powermining.craft: true
+            powermining.use: true
     powermining.craft:
         description: Allows players to craft the Hammer and Excavator tools
         default: true
