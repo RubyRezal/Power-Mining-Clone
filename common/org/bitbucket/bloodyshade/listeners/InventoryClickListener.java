@@ -41,10 +41,11 @@ public class InventoryClickListener implements Listener {
 	public void canEnchant(InventoryClickEvent event) {
 		boolean canEnchant = false;
 
-		// Ignore in case this is not an Anvil
+		// Ignore the event in case this is not an Anvil
 		if (!(event.getInventory() instanceof AnvilInventory))
 			return;
 
+		// If the player is not trying to get the resulting item out of the anvil, ignore the event 
 		if (event.getSlotType() != SlotType.RESULT)
 			return;
 
@@ -64,16 +65,17 @@ public class InventoryClickListener implements Listener {
 			if (lore.contains(CraftItemHammer.loreString) || lore.contains(CraftItemExcavator.loreString)) {
 				ItemStack slot2 = event.getInventory().getItem(1);
 
-				if (slot2 == null || !slot2.hasItemMeta())
+				if (slot2 == null)
 					return;
 
 				// If this is not a book we need to check if it's another power tool, else they can combine
 				if (slot2.getType() != Material.ENCHANTED_BOOK &&
-						(Reference.PICKAXES.contains(slot2.getType()) || Reference.SPADES.contains(slot2.getType()))) {
+						(Reference.PICKAXES.contains(slot2.getType()) || Reference.SPADES.contains(slot2.getType())) &&
+						(!item.getEnchantments().isEmpty() && !slot2.getEnchantments().isEmpty())) {
 						lore.clear();
 						lore = slot2.getItemMeta().getLore();
 
-						if (!lore.contains(CraftItemHammer.loreString) && !lore.contains(CraftItemExcavator.loreString))
+						if (lore == null || (!lore.contains(CraftItemHammer.loreString) && !lore.contains(CraftItemExcavator.loreString)))
 							return;
 				}
 
