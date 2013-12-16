@@ -42,7 +42,7 @@ public class PlayerInteractListener implements Listener {
 		}
 	}
 
-	public BlockFace getBlockFacebyPlayerName(String name) {
+	public BlockFace getBlockFaceByPlayerName(String name) {
 		return faces.get(name);
 	}
 }

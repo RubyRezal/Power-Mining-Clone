@@ -12,13 +12,9 @@
 
 package org.bitbucket.bloodyshade.listeners;
 
-import java.util.List;
-
 import org.bitbucket.bloodyshade.PowerMining;
-import org.bitbucket.bloodyshade.crafting.CraftItemExcavator;
-import org.bitbucket.bloodyshade.crafting.CraftItemHammer;
-import org.bitbucket.bloodyshade.lib.Reference;
-import org.bukkit.entity.HumanEntity;
+import org.bitbucket.bloodyshade.lib.PowerUtils;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -36,76 +32,14 @@ public class CraftItemListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void canCraft(CraftItemEvent event) {
-		boolean canCraft = false;
-
-		HumanEntity player = event.getWhoClicked();
 		ItemStack resultItem = event.getRecipe().getResult();
-		List<String> lore = resultItem.getItemMeta().getLore();
 
-		// If the item has no lore, it can't be one of the power tools
-		if (lore == null)
+		// Check if the item is a power tool
+		if (!PowerUtils.isPowerTool(resultItem))
 			return;
 
-		if (Reference.PICKAXES.contains(resultItem.getType()) || Reference.SPADES.contains(resultItem.getType())) {
-			if (lore.contains(CraftItemHammer.loreString) || lore.contains(CraftItemExcavator.loreString)) {
-				switch (resultItem.getType()) {
-					case WOOD_PICKAXE:
-						if (player.hasPermission("powermining.craft.hammer.wood"))
-							canCraft = true;
-
-						break;
-					case STONE_PICKAXE:
-						if (player.hasPermission("powermining.craft.hammer.stone"))
-							canCraft = true;
-
-						break;
-					case IRON_PICKAXE:
-						if (player.hasPermission("powermining.craft.hammer.iron"))
-							canCraft = true;
-
-						break;
-					case GOLD_PICKAXE:
-						if (player.hasPermission("powermining.craft.hammer.gold"))
-							canCraft = true;
-
-						break;
-					case DIAMOND_PICKAXE:
-						if (player.hasPermission("powermining.craft.hammer.diamond"))
-							canCraft = true;
-
-						break;
-					case WOOD_SPADE:
-						if (player.hasPermission("powermining.craft.excavator.wood"))
-							canCraft = true;
-
-						break;
-					case STONE_SPADE:
-						if (player.hasPermission("powermining.craft.excavator.stone"))
-							canCraft = true;
-
-						break;
-					case IRON_SPADE:
-						if (player.hasPermission("powermining.craft.excavator.iron"))
-							canCraft = true;
-
-						break;
-					case GOLD_SPADE:
-						if (player.hasPermission("powermining.craft.excavator.gold"))
-							canCraft = true;
-
-						break;
-					case DIAMOND_SPADE:
-						if (player.hasPermission("powermining.craft.excavator.diamond"))
-							canCraft = true;
-
-						break;
-					default:
-						break;
-				}
-			}
-		}
-
-		if (!canCraft)
+		// Check if the player has crafting permission for this item type
+		if (!PowerUtils.checkCraftPermission((Player) event.getWhoClicked(), resultItem.getType()))
 			event.setCancelled(true);
 	}
 }
