@@ -37,6 +37,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
+import com.palmergames.bukkit.towny.Towny;
+import com.palmergames.bukkit.towny.object.TownyPermission;
+import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public class BlockBreakListener implements Listener {
@@ -67,6 +70,7 @@ public class BlockBreakListener implements Listener {
 			PlayerInteractListener pil = plugin.getPlayerInteractHandler().getListener();
 			BlockFace blockFace = pil.getBlockFacebyPlayerName(playerName);
 
+			// Check if the block is allowed to be power mined
 			if (Reference.MINABLE.containsKey(blockType) || Reference.DIGABLE.contains(blockType)) {
 				String loreString = "";
 				boolean useHammer = false;
@@ -84,6 +88,11 @@ public class BlockBreakListener implements Listener {
 					return;
 				}
 
+				// Check if this is a power tool, based on the lore string
+				List<String> lore = handItem.getItemMeta().getLore();
+				if (lore == null || !lore.contains(loreString))
+					return;
+
 				Map<Enchantment, Integer> enchants = handItem.getEnchantments();
 				Enchantment enchant = null;
 				int enchantLevel = 1;
@@ -97,15 +106,12 @@ public class BlockBreakListener implements Listener {
 					enchantLevel = enchants.get(Enchantment.LOOT_BONUS_BLOCKS);
 				}
 
-				List<String> lore = handItem.getItemMeta().getLore();
-				if (lore == null || !lore.contains(loreString))
-					return;
-
 				short curDur = handItem.getDurability();
 				short maxDur = handItem.getType().getMaxDurability();
 
 				WorldGuardPlugin wg = plugin.getWorldGuard();
 				GriefPrevention gp = plugin.getGriefPrevention();
+				Towny towny = plugin.getTowny();
 
 				// Breaks surrounding blocks as long as they match the corresponding tool
 				for (Block e: getSurroundingBlocks(blockFace, block)) {
@@ -117,9 +123,11 @@ public class BlockBreakListener implements Listener {
 								Reference.MINABLE.get(blockMat).contains(handItem.getType()))) ||
 							(Reference.DIGABLE.contains(blockMat) && useExcavator)) {
 
+						// If the block is protected by WorldGuard and you have no build rights, cancel block break
 						if ((wg != null && (wg instanceof WorldGuardPlugin)) && !wg.canBuild(event.getPlayer(), blockLoc))
 							continue;
 
+						// If the block is protected by GriefPrevention and you have no build rights, cancel block break
 						if (gp != null && (gp instanceof GriefPrevention)) {
 							Claim claim = GriefPrevention.instance.dataStore.getClaimAt(blockLoc, true);
 
@@ -127,11 +135,19 @@ public class BlockBreakListener implements Listener {
 								continue;
 						}
 
-						if (blockMat == Material.SNOW) {
-							ItemStack snow = new ItemStack(Material.SNOW_BALL, 1);
+						// If the block is protected by Towny and you have no destroy rights, cancel block break
+						if (towny != null && (towny instanceof Towny)) {
+							if (!PlayerCacheUtil.getCachePermission(event.getPlayer(), blockLoc, e.getType().getId(), (byte)0, TownyPermission.ActionType.DESTROY))
+								continue;
+						}
+
+						// Snowballs do not drop if you just breakNaturally(), so this needs to be special parsed
+						if (blockMat == Material.SNOW && useExcavator) {
+							ItemStack snow = new ItemStack(Material.SNOW_BALL, 1 + e.getData());
 							e.getWorld().dropItemNaturally(blockLoc, snow);
 						}
 
+						// If there is no enchant on the item or the block is not on the effect lists, just break
 						if (enchant == null ||
 								((!Reference.MINEABLE_SILKTOUCH.contains(blockMat) && Reference.MINEABLE_FORTUNE.get(blockMat) == null) &&
 								(!Reference.DIGABLE_SILKTOUCH.contains(blockMat) && Reference.DIGABLE_FORTUNE.get(blockMat) == null))) {
@@ -153,12 +169,12 @@ public class BlockBreakListener implements Listener {
 										amount = Math.min((rand.nextInt(5) + 2) + enchantLevel, 4);
 
 										break;
-									case REDSTONE_ORE: // Redstone drops 4-5 dust, up to 8 max
+									case REDSTONE_ORE: // Redstone Ore drops 4-5 dust, up to 8 max
 									case GLOWING_REDSTONE_ORE:
 										amount = Math.min((rand.nextInt(2) + 4) + enchantLevel, 8);
 
 										break;
-									case COAL_ORE: // All these drop only 1 item
+									case COAL_ORE: // All these ores drop only 1 item
 									case DIAMOND_ORE:
 									case EMERALD_ORE:
 									case QUARTZ_ORE:
@@ -172,6 +188,7 @@ public class BlockBreakListener implements Listener {
 										break;
 								}
 
+								// Lapis needs to be special parsed since it's actually just a DYE with damage value of 4
 								if (blockMat == Material.LAPIS_ORE) {
 									drop = new ItemStack(Reference.MINEABLE_FORTUNE.get(blockMat), amount, (short)4);
 								}
@@ -207,6 +224,7 @@ public class BlockBreakListener implements Listener {
 							}
 						}
 
+						// If this is set, durability will be reduced from the tool for each broken block
 						if (useDurabilityPerBlock) {
 							if (curDur++ < maxDur)
 								handItem.setDurability(curDur);
@@ -219,6 +237,7 @@ public class BlockBreakListener implements Listener {
 		}
 	}
 
+	// This method returns the total amount to be dropped based on fortune level and the normal drop amount
 	public int getAmountPerFortune(int level, int amount) {
 		Random rand = new Random();
 
@@ -242,6 +261,7 @@ public class BlockBreakListener implements Listener {
 		return amount;
 	}
 
+	// This method returns a list of surrounding (3x3) blocks given a block face and target block
 	public ArrayList<Block> getSurroundingBlocks(BlockFace blockFace, Block targetBlock) {
 		ArrayList<Block> blocks = new ArrayList<Block>();
 		World world = targetBlock.getWorld();

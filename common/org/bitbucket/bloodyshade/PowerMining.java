@@ -19,6 +19,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bitbucket.bloodyshade.handlers.BlockBreakHandler;
 import org.bitbucket.bloodyshade.handlers.CraftItemHandler;
 import org.bitbucket.bloodyshade.handlers.PlayerInteractHandler;
+
+import com.palmergames.bukkit.towny.Towny;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public final class PowerMining extends JavaPlugin {
@@ -27,6 +29,7 @@ public final class PowerMining extends JavaPlugin {
 	CraftItemHandler handlerCraftItem;
 	Plugin worldguard;
 	Plugin griefprevention;
+	Plugin towny;
 
 	@Override
 	public void onEnable(){
@@ -40,6 +43,8 @@ public final class PowerMining extends JavaPlugin {
 
 		worldguard = getServer().getPluginManager().getPlugin("WorldGuard");
 		griefprevention = getServer().getPluginManager().getPlugin("GriefPrevention");
+		towny = getServer().getPluginManager().getPlugin("Towny");
+
 		this.saveDefaultConfig();
 
 		getLogger().info("PowerMining plugin was enabled.");
@@ -68,5 +73,9 @@ public final class PowerMining extends JavaPlugin {
 
 	public GriefPrevention getGriefPrevention() {
 		return (GriefPrevention) griefprevention;
+	}
+
+	public Towny getTowny() {
+		return (Towny) towny;
 	}
 }
