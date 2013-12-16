@@ -31,6 +31,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -55,18 +56,72 @@ public class BlockBreakListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void checkToolAndBreakBlocks(BlockBreakEvent event) {
-		if (event.getPlayer() != null) {
+		Player player = event.getPlayer();
+
+		if (player != null && (player instanceof Player)) {
 			// If the player is sneaking, we want the tool to act like a normal pickaxe/shovel
-			if (event.getPlayer().isSneaking())
+			if (player.isSneaking())
 				return;
 
 			// If the player does not have permission to use the tool, acts like a normal pickaxe/shovel
-			if (!event.getPlayer().hasPermission("powermining.use"))
-				return;
+			switch (player.getItemInHand().getType()) {
+				case WOOD_PICKAXE:
+					if (!player.hasPermission("powermining.use.hammer.wood"))
+						return;
+	
+					break;
+				case STONE_PICKAXE:
+					if (!player.hasPermission("powermining.use.hammer.stone"))
+						return;
+	
+					break;
+				case IRON_PICKAXE:
+					if (!player.hasPermission("powermining.use.hammer.iron"))
+						return;
+	
+					break;
+				case GOLD_PICKAXE:
+					if (!player.hasPermission("powermining.use.hammer.gold"))
+						return;
+	
+					break;
+				case DIAMOND_PICKAXE:
+					if (!player.hasPermission("powermining.use.hammer.diamond"))
+						return;
+	
+					break;
+				case WOOD_SPADE:
+					if (!player.hasPermission("powermining.use.excavator.wood"))
+						return;
+	
+					break;
+				case STONE_SPADE:
+					if (!player.hasPermission("powermining.use.excavator.stone"))
+						return;
+	
+					break;
+				case IRON_SPADE:
+					if (!player.hasPermission("powermining.use.excavator.iron"))
+						return;
+	
+					break;
+				case GOLD_SPADE:
+					if (!player.hasPermission("powermining.use.excavator.gold"))
+						return;
+	
+					break;
+				case DIAMOND_SPADE:
+					if (!player.hasPermission("powermining.use.excavator.diamond"))
+						return;
+	
+					break;
+				default:
+					return;
+			}
 
 			Block block = event.getBlock();
-			ItemStack handItem = event.getPlayer().getItemInHand();
-			String playerName = event.getPlayer().getName();
+			ItemStack handItem = player.getItemInHand();
+			String playerName = player.getName();
 
 			Material blockType = block.getType();
 			Material handItemType = handItem.getType();
@@ -128,20 +183,20 @@ public class BlockBreakListener implements Listener {
 							(Reference.DIGABLE.contains(blockMat) && useExcavator)) {
 
 						// If the block is protected by WorldGuard and you have no build rights, cancel block break
-						if ((wg != null && (wg instanceof WorldGuardPlugin)) && !wg.canBuild(event.getPlayer(), blockLoc))
+						if ((wg != null && (wg instanceof WorldGuardPlugin)) && !wg.canBuild(player, blockLoc))
 							continue;
 
 						// If the block is protected by GriefPrevention and you have no build rights, cancel block break
 						if (gp != null && (gp instanceof GriefPrevention)) {
 							Claim claim = GriefPrevention.instance.dataStore.getClaimAt(blockLoc, true);
 
-							if (claim != null && claim.allowBreak(event.getPlayer(), e) != null)
+							if (claim != null && claim.allowBreak(player, e) != null)
 								continue;
 						}
 
 						// If the block is protected by Towny and you have no destroy rights, cancel block break
 						if (towny != null && (towny instanceof Towny)) {
-							if (!PlayerCacheUtil.getCachePermission(event.getPlayer(), blockLoc, e.getType().getId(), (byte)0, TownyPermission.ActionType.DESTROY))
+							if (!PlayerCacheUtil.getCachePermission(player, blockLoc, e.getType().getId(), (byte)0, TownyPermission.ActionType.DESTROY))
 								continue;
 						}
 
