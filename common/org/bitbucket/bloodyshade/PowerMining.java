@@ -18,6 +18,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bitbucket.bloodyshade.handlers.BlockBreakHandler;
 import org.bitbucket.bloodyshade.handlers.CraftItemHandler;
+import org.bitbucket.bloodyshade.handlers.EnchantItemHandler;
+import org.bitbucket.bloodyshade.handlers.InventoryClickHandler;
 import org.bitbucket.bloodyshade.handlers.PlayerInteractHandler;
 
 import com.palmergames.bukkit.towny.Towny;
@@ -27,6 +29,9 @@ public final class PowerMining extends JavaPlugin {
 	PlayerInteractHandler handlerPlayerInteract;
 	BlockBreakHandler handlerBlockBreak;
 	CraftItemHandler handlerCraftItem;
+	EnchantItemHandler handlerEnchantItem;
+	InventoryClickHandler handlerInventoryClick;
+
 	Plugin worldguard;
 	Plugin griefprevention;
 	Plugin towny;
@@ -36,10 +41,14 @@ public final class PowerMining extends JavaPlugin {
 		handlerPlayerInteract = new PlayerInteractHandler();
 		handlerBlockBreak = new BlockBreakHandler();
 		handlerCraftItem = new CraftItemHandler();
+		handlerEnchantItem = new EnchantItemHandler();
+		handlerInventoryClick = new InventoryClickHandler();
 
 		handlerPlayerInteract.Init(this);
 		handlerBlockBreak.Init(this);
 		handlerCraftItem.Init(this);
+		handlerEnchantItem.Init(this);
+		handlerInventoryClick.Init(this);
 
 		worldguard = getServer().getPluginManager().getPlugin("WorldGuard");
 		griefprevention = getServer().getPluginManager().getPlugin("GriefPrevention");
@@ -65,6 +74,10 @@ public final class PowerMining extends JavaPlugin {
 
 	public CraftItemHandler getCraftItemHandler() {
 		return handlerCraftItem;
+	}
+
+	public EnchantItemHandler getEnchantItemHandler() {
+		return handlerEnchantItem;
 	}
 
 	public WorldGuardPlugin getWorldGuard() {

@@ -7,7 +7,7 @@
  */
 
 /*
- * This class is responsible for cancelling the crafting in case the user does not have permission
+ * This class is responsible for cancelling the enchanting in case the user does not have permission
  */
 
 package org.bitbucket.bloodyshade.listeners;
@@ -18,85 +18,85 @@ import org.bitbucket.bloodyshade.PowerMining;
 import org.bitbucket.bloodyshade.crafting.CraftItemExcavator;
 import org.bitbucket.bloodyshade.crafting.CraftItemHammer;
 import org.bitbucket.bloodyshade.lib.Reference;
-import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class CraftItemListener implements Listener {
+public class EnchantItemListener implements Listener {
 	PowerMining plugin;
 
-	public CraftItemListener(PowerMining plugin) {
+	public EnchantItemListener(PowerMining plugin) {
 		this.plugin = plugin;
 
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-	public void canCraft(CraftItemEvent event) {
-		boolean canCraft = false;
+	public void canEnchant(EnchantItemEvent event) {
+		boolean canEnchant = false;
 
-		HumanEntity player = event.getWhoClicked();
-		ItemStack resultItem = event.getRecipe().getResult();
-		List<String> lore = resultItem.getItemMeta().getLore();
+		Player player = event.getEnchanter();
+		ItemStack item = event.getItem();
+		List<String> lore = item.getItemMeta().getLore();
 
 		// If the item has no lore, it can't be one of the power tools
 		if (lore == null)
 			return;
 
-		if (Reference.PICKAXES.contains(resultItem.getType()) || Reference.SPADES.contains(resultItem.getType())) {
+		if (Reference.PICKAXES.contains(item.getType()) || Reference.SPADES.contains(item.getType())) {
 			if (lore.contains(CraftItemHammer.loreString) || lore.contains(CraftItemExcavator.loreString)) {
-				switch (resultItem.getType()) {
+				switch (item.getType()) {
 					case WOOD_PICKAXE:
-						if (player.hasPermission("powermining.craft.hammer.wood"))
-							canCraft = true;
+						if (player.hasPermission("powermining.enchant.hammer.wood"))
+							canEnchant = true;
 
 						break;
 					case STONE_PICKAXE:
-						if (player.hasPermission("powermining.craft.hammer.stone"))
-							canCraft = true;
+						if (player.hasPermission("powermining.enchant.hammer.stone"))
+							canEnchant = true;
 
 						break;
 					case IRON_PICKAXE:
-						if (player.hasPermission("powermining.craft.hammer.iron"))
-							canCraft = true;
+						if (player.hasPermission("powermining.enchant.hammer.iron"))
+							canEnchant = true;
 
 						break;
 					case GOLD_PICKAXE:
-						if (player.hasPermission("powermining.craft.hammer.gold"))
-							canCraft = true;
+						if (player.hasPermission("powermining.enchant.hammer.gold"))
+							canEnchant = true;
 
 						break;
 					case DIAMOND_PICKAXE:
-						if (player.hasPermission("powermining.craft.hammer.diamond"))
-							canCraft = true;
+						if (player.hasPermission("powermining.enchant.hammer.diamond"))
+							canEnchant = true;
 
 						break;
 					case WOOD_SPADE:
-						if (player.hasPermission("powermining.craft.excavator.wood"))
-							canCraft = true;
+						if (player.hasPermission("powermining.enchant.excavator.wood"))
+							canEnchant = true;
 
 						break;
 					case STONE_SPADE:
-						if (player.hasPermission("powermining.craft.excavator.stone"))
-							canCraft = true;
+						if (player.hasPermission("powermining.enchant.excavator.stone"))
+							canEnchant = true;
 
 						break;
 					case IRON_SPADE:
-						if (player.hasPermission("powermining.craft.excavator.iron"))
-							canCraft = true;
+						if (player.hasPermission("powermining.enchant.excavator.iron"))
+							canEnchant = true;
 
 						break;
 					case GOLD_SPADE:
-						if (player.hasPermission("powermining.craft.excavator.gold"))
-							canCraft = true;
+						if (player.hasPermission("powermining.enchant.excavator.gold"))
+							canEnchant = true;
 
 						break;
 					case DIAMOND_SPADE:
-						if (player.hasPermission("powermining.craft.excavator.diamond"))
-							canCraft = true;
+						if (player.hasPermission("powermining.enchant.excavator.diamond"))
+							canEnchant = true;
 
 						break;
 					default:
@@ -105,7 +105,7 @@ public class CraftItemListener implements Listener {
 			}
 		}
 
-		if (!canCraft)
+		if (!canEnchant)
 			event.setCancelled(true);
 	}
 }
