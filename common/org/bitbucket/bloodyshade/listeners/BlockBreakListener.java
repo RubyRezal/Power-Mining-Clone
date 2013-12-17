@@ -97,7 +97,7 @@ public class BlockBreakListener implements Listener {
 						(Reference.MINABLE.get(blockMat) == null || Reference.MINABLE.get(blockMat).contains(handItem.getType()))) ||
 						(PowerUtils.isDigable(blockMat) && useExcavator)) {
 
-					// Check if player have permission to break the block
+					// Check if player has permission to break the block
 					if (!PowerUtils.canBreak(plugin, player, e))
 						continue;
 
@@ -107,7 +107,7 @@ public class BlockBreakListener implements Listener {
 						e.getWorld().dropItemNaturally(blockLoc, snow);
 					}
 					// If there is no enchant on the item or the block is not on the effect lists, just break
-					else if (enchant == null || (!PowerUtils.canSilkTouch(blockMat) && !PowerUtils.canFortune(blockMat)))
+					if (enchant == null || (!PowerUtils.canSilkTouch(blockMat) && !PowerUtils.canFortune(blockMat)))
 						e.breakNaturally(handItem);
 					else {
 						ItemStack drop = PowerUtils.processEnchantsAndReturnItemStack(enchant, enchantLevel, e);
