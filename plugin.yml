@@ -1,6 +1,6 @@
 name: PowerMining
 main: org.bitbucket.bloodyshade.PowerMining
-version: 2.7
+version: 2.7.1
 author: BloodyShade
 description: Implements Hammer and Excavator tools for faster mining
 
@@ -12,6 +12,11 @@ permissions:
             powermining.craft.all: true
             powermining.use.all: true
             powermining.enchant.all: true
+            powermining.highdurability: true
+
+    powermining.highdurability:
+        description: Allows player's Hammers/Excavators to use only 1 durability per use
+        default: true
 
     powermining.craft.*:
         description: Allows players to craft all Hammers and Excavators

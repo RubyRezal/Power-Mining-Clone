@@ -61,17 +61,8 @@ public class BlockBreakListener implements Listener {
 			Block block = event.getBlock();
 			String playerName = player.getName();
 
-			Material blockType = block.getType();
-
 			PlayerInteractListener pil = plugin.getPlayerInteractHandler().getListener();
 			BlockFace blockFace = pil.getBlockFaceByPlayerName(playerName);
-
-			boolean useHammer = PowerUtils.isMineable(blockType);
-			boolean useExcavator = PowerUtils.isDigable(blockType);
-
-			// If the block is not allowed to be mined or dug, acts like a normal pickaxe/shovel
-			if (!useHammer && !useExcavator)
-				return;
 
 			Map<Enchantment, Integer> enchants = handItem.getEnchantments();
 			Enchantment enchant = null;
@@ -93,9 +84,15 @@ public class BlockBreakListener implements Listener {
 				Material blockMat = e.getType();
 				Location blockLoc = e.getLocation();
 
-				if ((PowerUtils.isMineable(blockMat) && useHammer &&
-						(Reference.MINABLE.get(blockMat) == null || Reference.MINABLE.get(blockMat).contains(handItem.getType()))) ||
-						(PowerUtils.isDigable(blockMat) && useExcavator)) {
+				boolean useHammer = PowerUtils.validateHammer(handItem.getType(), blockMat);
+				boolean useExcavator = PowerUtils.validateExcavator(handItem.getType(), blockMat);
+
+				if (useHammer)
+					useExcavator = false;
+				else if (useExcavator)
+					useHammer = false;
+
+				if (useHammer || useExcavator) {
 
 					// Check if player has permission to break the block
 					if (!PowerUtils.canBreak(plugin, player, e))
@@ -106,8 +103,11 @@ public class BlockBreakListener implements Listener {
 						ItemStack snow = new ItemStack(Material.SNOW_BALL, 1 + e.getData());
 						e.getWorld().dropItemNaturally(blockLoc, snow);
 					}
+
 					// If there is no enchant on the item or the block is not on the effect lists, just break
-					if (enchant == null || (!PowerUtils.canSilkTouch(blockMat) && !PowerUtils.canFortune(blockMat)))
+					if (enchant == null ||
+							((!PowerUtils.canSilkTouchMine(blockMat) || !PowerUtils.canFortuneMine(blockMat)) && useHammer) ||
+							((!PowerUtils.canFortuneDig(blockMat) || !PowerUtils.canFortuneDig(blockMat)) && useExcavator))
 						e.breakNaturally(handItem);
 					else {
 						ItemStack drop = PowerUtils.processEnchantsAndReturnItemStack(enchant, enchantLevel, e);
@@ -116,10 +116,12 @@ public class BlockBreakListener implements Listener {
 							e.getWorld().dropItemNaturally(blockLoc, drop);
 							e.setType(Material.AIR);
 						}
+						else
+							e.breakNaturally(handItem);
 					}
 					
 					// If this is set, durability will be reduced from the tool for each broken block
-					if (useDurabilityPerBlock) {
+					if (useDurabilityPerBlock || !player.hasPermission("powermining.highdurability")) {
 						if (curDur++ < maxDur)
 							handItem.setDurability(curDur);
 						else
