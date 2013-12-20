@@ -92,15 +92,20 @@ public class PowerUtils {
 	}
 
 	// This method returns if you can use silk-touch on the block
-	public static boolean canSilkTouch(Material blockType) {
-		return (Reference.MINEABLE_SILKTOUCH.contains(blockType) || Reference.DIGABLE_SILKTOUCH.contains(blockType));
+	public static boolean canSilkTouchMine(Material blockType) {
+		return Reference.MINEABLE_SILKTOUCH.contains(blockType);
+	}
+	public static boolean canSilkTouchDig(Material blockType) {
+		return Reference.DIGABLE_SILKTOUCH.contains(blockType);
 	}
 
 	// This method returns if you can use fortune on the block
-	public static boolean canFortune(Material blockType) {
-		return (Reference.MINEABLE_FORTUNE.get(blockType) != null || Reference.DIGABLE_FORTUNE.get(blockType) != null);
+	public static boolean canFortuneMine(Material blockType) {
+		return Reference.MINEABLE_FORTUNE.get(blockType) != null;
 	}
-
+	public static boolean canFortuneDig(Material blockType) {
+		return Reference.DIGABLE_FORTUNE.get(blockType) != null;
+	}
 	// This method returns if the block is mineable
 	public static boolean isMineable(Material blockType) {
 		return Reference.MINABLE.containsKey(blockType);
@@ -436,5 +441,16 @@ public class PowerUtils {
 		}
 
 		return true;
+	}
+
+	// Returns if the tool is a valid hammer against certain block
+	public static boolean validateHammer(Material hammerType, Material blockType) {
+		return (isMineable(blockType) && Reference.PICKAXES.contains(hammerType) &&
+				(Reference.MINABLE.get(blockType) == null || Reference.MINABLE.get(blockType).contains(hammerType)));
+	}
+
+	// Returns if the tool is a valid excavator against certain block
+	public static boolean validateExcavator(Material excavatorType, Material blockType) {
+		return (isDigable(blockType) && Reference.SPADES.contains(excavatorType));
 	}
 }
