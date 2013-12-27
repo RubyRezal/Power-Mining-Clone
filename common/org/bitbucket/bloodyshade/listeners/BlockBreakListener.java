@@ -15,7 +15,6 @@ package org.bitbucket.bloodyshade.listeners;
 import java.util.Map;
 import org.bitbucket.bloodyshade.PowerMining;
 import org.bitbucket.bloodyshade.lib.PowerUtils;
-import org.bitbucket.bloodyshade.lib.Reference;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -84,13 +83,12 @@ public class BlockBreakListener implements Listener {
 				Material blockMat = e.getType();
 				Location blockLoc = e.getLocation();
 
-				boolean useHammer = PowerUtils.validateHammer(handItem.getType(), blockMat);
-				boolean useExcavator = PowerUtils.validateExcavator(handItem.getType(), blockMat);
+				boolean useHammer = false;
+				boolean useExcavator = false;
 
-				if (useHammer)
-					useExcavator = false;
-				else if (useExcavator)
-					useHammer = false;
+				// This bit is necessary to guarantee we only get one or the other as true, otherwise it might break blocks with the wrong tool
+				if (useHammer = PowerUtils.validateHammer(handItem.getType(), blockMat));
+				else if (useExcavator = PowerUtils.validateExcavator(handItem.getType(), blockMat));
 
 				if (useHammer || useExcavator) {
 
@@ -119,7 +117,7 @@ public class BlockBreakListener implements Listener {
 						else
 							e.breakNaturally(handItem);
 					}
-					
+
 					// If this is set, durability will be reduced from the tool for each broken block
 					if (useDurabilityPerBlock || !player.hasPermission("powermining.highdurability")) {
 						if (curDur++ < maxDur)

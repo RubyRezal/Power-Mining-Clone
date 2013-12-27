@@ -1,6 +1,6 @@
 name: PowerMining
 main: org.bitbucket.bloodyshade.PowerMining
-version: 2.7.1
+version: 2.7.5
 author: BloodyShade
 description: Implements Hammer and Excavator tools for faster mining
 
