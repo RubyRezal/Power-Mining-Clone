@@ -74,7 +74,7 @@ public final class PowerMining extends JavaPlugin {
 
 	public void processConfig() {
 		try {
-			for (Object x : (ArrayList) getConfig().getList("Mineable")) {
+			for (Object x : (ArrayList) getConfig().getList("Minable")) {
 				LinkedHashMap<String, ArrayList> l = (LinkedHashMap<String, ArrayList>)x;
 
 				for (String blockType: l.keySet()) {
