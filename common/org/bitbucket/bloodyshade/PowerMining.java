@@ -12,8 +12,10 @@
 
 package org.bitbucket.bloodyshade;
 
-import me.ryanhamshire.GriefPrevention.GriefPrevention;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
+import org.bukkit.Material;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bitbucket.bloodyshade.handlers.BlockBreakHandler;
@@ -21,6 +23,9 @@ import org.bitbucket.bloodyshade.handlers.CraftItemHandler;
 import org.bitbucket.bloodyshade.handlers.EnchantItemHandler;
 import org.bitbucket.bloodyshade.handlers.InventoryClickHandler;
 import org.bitbucket.bloodyshade.handlers.PlayerInteractHandler;
+import org.bitbucket.bloodyshade.lib.Reference;
+
+import me.ryanhamshire.GriefPrevention.GriefPrevention;
 
 import com.palmergames.bukkit.towny.Towny;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -57,11 +62,66 @@ public final class PowerMining extends JavaPlugin {
 		this.saveDefaultConfig();
 
 		getLogger().info("PowerMining plugin was enabled.");
-    }
+
+		processConfig();
+		getLogger().info("Finished processing config file.");
+	}
 
 	@Override
 	public void onDisable() {
 		getLogger().info("PowerMining plugin was disabled.");
+	}
+
+	public void processConfig() {
+		try {
+			for (Object x : (ArrayList) getConfig().getList("Mineable")) {
+				LinkedHashMap<String, ArrayList> l = (LinkedHashMap<String, ArrayList>)x;
+
+				for (String blockType: l.keySet()) {
+					if (blockType == null || blockType.isEmpty())
+						continue;
+
+					if (Material.getMaterial(blockType) == null || Reference.MINABLE.containsKey(Material.getMaterial(blockType)))
+						continue;
+
+					Reference.MINABLE.put(Material.getMaterial(blockType), new ArrayList<Material>());
+					ArrayList<Material> temp = Reference.MINABLE.get(Material.getMaterial(blockType));
+
+					for (String hammerType: (ArrayList<String>)l.get(blockType)) {
+						if (hammerType == null || hammerType.isEmpty())
+							continue;
+
+						if (hammerType.equals("any"))
+							temp = null;
+
+						if (hammerType != null && (Material.getMaterial(hammerType) == null ||
+								(temp != null && temp.contains(Material.getMaterial(hammerType)))))
+							continue;
+
+						if (temp != null)
+							temp.add(Material.getMaterial(hammerType));
+					}
+
+					Reference.MINABLE.put(Material.getMaterial(blockType), temp);
+				}
+			}
+		}
+		catch (NullPointerException e) {
+			getLogger().info("NPE when trying to read the Minable list from the config file, check if it's set correctly!");
+		}
+
+		try {
+			for (String blockType : getConfig().getStringList("Diggable")) {
+				if (blockType == null || blockType.isEmpty())
+					continue;
+
+				if (Material.getMaterial(blockType) != null && ! Reference.DIGGABLE.contains(Material.getMaterial(blockType)))
+					Reference.DIGGABLE.add(Material.getMaterial(blockType));
+			}
+		}
+		catch (NullPointerException e) {
+			getLogger().info("NPE when trying to read the Digable list from the config file, check if it's set correctly!");
+		}
 	}
 
 	public PlayerInteractHandler getPlayerInteractHandler() {

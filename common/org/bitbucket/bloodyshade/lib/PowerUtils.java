@@ -93,18 +93,18 @@ public class PowerUtils {
 
 	// This method returns if you can use silk-touch on the block
 	public static boolean canSilkTouchMine(Material blockType) {
-		return Reference.MINEABLE_SILKTOUCH.contains(blockType);
+		return Reference.MINABLE_SILKTOUCH.contains(blockType);
 	}
 	public static boolean canSilkTouchDig(Material blockType) {
-		return Reference.DIGABLE_SILKTOUCH.contains(blockType);
+		return Reference.DIGGABLE_SILKTOUCH.contains(blockType);
 	}
 
 	// This method returns if you can use fortune on the block
 	public static boolean canFortuneMine(Material blockType) {
-		return Reference.MINEABLE_FORTUNE.get(blockType) != null;
+		return Reference.MINABLE_FORTUNE.get(blockType) != null;
 	}
 	public static boolean canFortuneDig(Material blockType) {
-		return Reference.DIGABLE_FORTUNE.get(blockType) != null;
+		return Reference.DIGGABLE_FORTUNE.get(blockType) != null;
 	}
 	// This method returns if the block is mineable
 	public static boolean isMineable(Material blockType) {
@@ -113,7 +113,7 @@ public class PowerUtils {
 
 	// This method returns if the block is digable
 	public static boolean isDigable(Material blockType) {
-		return Reference.DIGABLE.contains(blockType);
+		return Reference.DIGGABLE.contains(blockType);
 	}
 
 	// This method will process the enchantment information and apply to to create the appropriate drop
@@ -127,7 +127,7 @@ public class PowerUtils {
 			int amount = 0;
 			Random rand = new Random();
 
-			if (Reference.MINEABLE_FORTUNE.get(blockType) != null) {
+			if (Reference.MINABLE_FORTUNE.get(blockType) != null) {
 				switch (blockType) {
 					case GLOWSTONE: // Glowstone drops 2-4 dust, up to 4 max
 						amount = Math.min((rand.nextInt(5) + 2) + enchantLevel, 4);
@@ -154,20 +154,20 @@ public class PowerUtils {
 				if (amount > 0) {
 					// Lapis needs to be special parsed since it's actually just a DYE with damage value of 4
 					if (blockType == Material.LAPIS_ORE)
-						drop = new ItemStack(Reference.MINEABLE_FORTUNE.get(blockType), amount, (short)4);
+						drop = new ItemStack(Reference.MINABLE_FORTUNE.get(blockType), amount, (short)4);
 					else
-						drop = new ItemStack(Reference.MINEABLE_FORTUNE.get(blockType), amount);
+						drop = new ItemStack(Reference.MINABLE_FORTUNE.get(blockType), amount);
 				}
 			}
-			else if (Reference.DIGABLE_FORTUNE.get(blockType) != null) {
+			else if (Reference.DIGGABLE_FORTUNE.get(blockType) != null) {
 				if (blockType == Material.GLOWSTONE) { // Glowstone drops 2-4 dust, up to 4 max
 					amount = Math.min((rand.nextInt(5) + 2) + enchantLevel, 4);
 
-					drop = new ItemStack(Reference.DIGABLE_FORTUNE.get(blockType), amount);
+					drop = new ItemStack(Reference.DIGGABLE_FORTUNE.get(blockType), amount);
 				}
 				else if (blockType == Material.GRAVEL) {
 					if (rand.nextDouble() <= getFlintDropChance(enchantLevel))
-						drop = new ItemStack(Reference.DIGABLE_FORTUNE.get(blockType), 1);
+						drop = new ItemStack(Reference.DIGGABLE_FORTUNE.get(blockType), 1);
 					else // If no flint is going to be dropped, drop gravel instead
 						drop = new ItemStack(blockType, 1);
 				}
@@ -239,52 +239,52 @@ public class PowerUtils {
 			case WOOD_PICKAXE:
 				if (player.hasPermission("powermining.craft.hammer.wood"))
 					canCraft = true;
-	
+
 				break;
 			case STONE_PICKAXE:
 				if (player.hasPermission("powermining.craft.hammer.stone"))
 					canCraft = true;
-	
+
 				break;
 			case IRON_PICKAXE:
 				if (player.hasPermission("powermining.craft.hammer.iron"))
 					canCraft = true;
-	
+
 				break;
 			case GOLD_PICKAXE:
 				if (player.hasPermission("powermining.craft.hammer.gold"))
 					canCraft = true;
-	
+
 				break;
 			case DIAMOND_PICKAXE:
 				if (player.hasPermission("powermining.craft.hammer.diamond"))
 					canCraft = true;
-	
+
 				break;
 			case WOOD_SPADE:
 				if (player.hasPermission("powermining.craft.excavator.wood"))
 					canCraft = true;
-	
+
 				break;
 			case STONE_SPADE:
 				if (player.hasPermission("powermining.craft.excavator.stone"))
 					canCraft = true;
-	
+
 				break;
 			case IRON_SPADE:
 				if (player.hasPermission("powermining.craft.excavator.iron"))
 					canCraft = true;
-	
+
 				break;
 			case GOLD_SPADE:
 				if (player.hasPermission("powermining.craft.excavator.gold"))
 					canCraft = true;
-	
+
 				break;
 			case DIAMOND_SPADE:
 				if (player.hasPermission("powermining.craft.excavator.diamond"))
 					canCraft = true;
-	
+
 				break;
 			default:
 				break;
@@ -300,52 +300,52 @@ public class PowerUtils {
 			case WOOD_PICKAXE:
 				if (player.hasPermission("powermining.use.hammer.wood"))
 					canUse = true;
-	
+
 				break;
 			case STONE_PICKAXE:
 				if (player.hasPermission("powermining.use.hammer.stone"))
 					canUse = true;
-	
+
 				break;
 			case IRON_PICKAXE:
 				if (player.hasPermission("powermining.use.hammer.iron"))
 					canUse = true;
-	
+
 				break;
 			case GOLD_PICKAXE:
 				if (player.hasPermission("powermining.use.hammer.gold"))
 					canUse = true;
-	
+
 				break;
 			case DIAMOND_PICKAXE:
 				if (player.hasPermission("powermining.use.hammer.diamond"))
 					canUse = true;
-	
+
 				break;
 			case WOOD_SPADE:
 				if (player.hasPermission("powermining.use.excavator.wood"))
 					canUse = true;
-	
+
 				break;
 			case STONE_SPADE:
 				if (player.hasPermission("powermining.use.excavator.stone"))
 					canUse = true;
-	
+
 				break;
 			case IRON_SPADE:
 				if (player.hasPermission("powermining.use.excavator.iron"))
 					canUse = true;
-	
+
 				break;
 			case GOLD_SPADE:
 				if (player.hasPermission("powermining.use.excavator.gold"))
 					canUse = true;
-	
+
 				break;
 			case DIAMOND_SPADE:
 				if (player.hasPermission("powermining.use.excavator.diamond"))
 					canUse = true;
-	
+
 				break;
 			default:
 				break;
@@ -362,52 +362,52 @@ public class PowerUtils {
 			case WOOD_PICKAXE:
 				if (player.hasPermission("powermining.enchant.hammer.wood"))
 					canEnchant = true;
-	
+
 				break;
 			case STONE_PICKAXE:
 				if (player.hasPermission("powermining.enchant.hammer.stone"))
 					canEnchant = true;
-	
+
 				break;
 			case IRON_PICKAXE:
 				if (player.hasPermission("powermining.enchant.hammer.iron"))
 					canEnchant = true;
-	
+
 				break;
 			case GOLD_PICKAXE:
 				if (player.hasPermission("powermining.enchant.hammer.gold"))
 					canEnchant = true;
-	
+
 				break;
 			case DIAMOND_PICKAXE:
 				if (player.hasPermission("powermining.enchant.hammer.diamond"))
 					canEnchant = true;
-	
+
 				break;
 			case WOOD_SPADE:
 				if (player.hasPermission("powermining.enchant.excavator.wood"))
 					canEnchant = true;
-	
+
 				break;
 			case STONE_SPADE:
 				if (player.hasPermission("powermining.enchant.excavator.stone"))
 					canEnchant = true;
-	
+
 				break;
 			case IRON_SPADE:
 				if (player.hasPermission("powermining.enchant.excavator.iron"))
 					canEnchant = true;
-	
+
 				break;
 			case GOLD_SPADE:
 				if (player.hasPermission("powermining.enchant.excavator.gold"))
 					canEnchant = true;
-	
+
 				break;
 			case DIAMOND_SPADE:
 				if (player.hasPermission("powermining.enchant.excavator.diamond"))
 					canEnchant = true;
-	
+
 				break;
 			default:
 				break;

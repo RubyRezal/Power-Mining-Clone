@@ -39,7 +39,7 @@ public class InventoryClickListener implements Listener {
 		if (!(event.getInventory() instanceof AnvilInventory))
 			return;
 
-		// If the player is not trying to get the resulting item out of the anvil, ignore the event 
+		// If the player is not trying to get the resulting item out of the anvil, ignore the event
 		if (event.getSlotType() != SlotType.RESULT)
 			return;
 
