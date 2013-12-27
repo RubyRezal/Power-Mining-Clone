@@ -3,8 +3,7 @@ useDurabilityPerBlock: false
 
 # These define the blocks that can be mined by the hammer, and which quality of base pickaxe is needed
 # (these are set according to the information on the minecraft wiki)
-# The pickaxes need to be in a list, thus even if it's only 1 item (like OBSIDIAN), it needs to be inside the []'s
-Mineable:
+Minable:
 - COBBLESTONE: [any]
 - STONE: [any]
 - BRICK: [any]
@@ -31,7 +30,7 @@ Mineable:
 #- DIAMOND_BLOCK: [IRON_PICKAXE, DIAMOND_PICKAXE]
 
 # These define the blocks that can be dug by the excavator
-Digable:
+Diggable:
  - GRASS
  - DIRT
  - SAND
