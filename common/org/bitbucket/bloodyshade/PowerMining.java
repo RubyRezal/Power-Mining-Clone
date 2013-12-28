@@ -72,6 +72,7 @@ public final class PowerMining extends JavaPlugin {
 		getLogger().info("PowerMining plugin was disabled.");
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void processConfig() {
 		try {
 			for (Object x : (ArrayList) getConfig().getList("Minable")) {

@@ -417,6 +417,7 @@ public class PowerUtils {
 	}
 
 	// This method returns if the player can destroy the target block
+	@SuppressWarnings("deprecation")
 	public static boolean canBreak(PowerMining plugin, Player player, Block block) {
 		WorldGuardPlugin wg = plugin.getWorldGuard();
 		GriefPrevention gp = plugin.getGriefPrevention();
