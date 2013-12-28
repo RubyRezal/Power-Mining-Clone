@@ -15,8 +15,6 @@ package org.bitbucket.bloodyshade.lib;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
-
 import org.bukkit.Material;
 
 public class Reference {

@@ -13,6 +13,7 @@
 package org.bitbucket.bloodyshade.listeners;
 
 import java.util.Map;
+
 import org.bitbucket.bloodyshade.PowerMining;
 import org.bitbucket.bloodyshade.lib.PowerUtils;
 import org.bukkit.Location;
@@ -38,6 +39,7 @@ public class BlockBreakListener implements Listener {
 		useDurabilityPerBlock = plugin.getConfig().getBoolean("useDurabilityPerBlock");
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void checkToolAndBreakBlocks(BlockBreakEvent event) {
 		Player player = event.getPlayer();
