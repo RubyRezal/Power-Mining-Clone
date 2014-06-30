@@ -108,7 +108,7 @@ public final class PowerMining extends JavaPlugin {
 			}
 		}
 		catch (NullPointerException e) {
-			getLogger().info("NPE when trying to read the Minable list from the config file, check if it's set correctly!");
+			getLogger().severe("NPE while trying to read the Minable list from the config file, check if it's set correctly!");
 		}
 
 		try {
@@ -116,12 +116,12 @@ public final class PowerMining extends JavaPlugin {
 				if (blockType == null || blockType.isEmpty())
 					continue;
 
-				if (Material.getMaterial(blockType) != null && ! Reference.DIGGABLE.contains(Material.getMaterial(blockType)))
+				if (Material.getMaterial(blockType) != null && !Reference.DIGGABLE.contains(Material.getMaterial(blockType)))
 					Reference.DIGGABLE.add(Material.getMaterial(blockType));
 			}
 		}
 		catch (NullPointerException e) {
-			getLogger().info("NPE when trying to read the Digable list from the config file, check if it's set correctly!");
+			getLogger().severe("NPE while trying to read the Diggable list from the config file, check if it's set correctly!");
 		}
 	}
 

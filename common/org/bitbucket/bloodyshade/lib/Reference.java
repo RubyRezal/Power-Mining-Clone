@@ -22,7 +22,7 @@ public class Reference {
 
 	public static ArrayList<Material> DIGGABLE = new ArrayList<Material>();
 
-	public static ArrayList<Material> MINABLE_SILKTOUCH =  new ArrayList<Material>(Arrays.asList(
+	public static ArrayList<Material> MINABLE_SILKTOUCH = new ArrayList<Material>(Arrays.asList(
 		Material.STONE,
 		Material.COAL_ORE,
 		Material.REDSTONE_ORE,
@@ -35,7 +35,7 @@ public class Reference {
 		Material.GLOWSTONE
 	));
 
-	public static ArrayList<Material> DIGGABLE_SILKTOUCH =  new ArrayList<Material>(Arrays.asList(
+	public static ArrayList<Material> DIGGABLE_SILKTOUCH = new ArrayList<Material>(Arrays.asList(
 		Material.GRASS,
 		Material.CLAY,
 		Material.SNOW_BLOCK,
@@ -65,7 +65,7 @@ public class Reference {
 		DIGGABLE_FORTUNE.put(Material.GLOWSTONE, Material.GLOWSTONE_DUST);
 	};
 
-	public static ArrayList<Material> PICKAXES =  new ArrayList<Material>(Arrays.asList(
+	public static ArrayList<Material> PICKAXES = new ArrayList<Material>(Arrays.asList(
 		Material.WOOD_PICKAXE,
 		Material.STONE_PICKAXE,
 		Material.IRON_PICKAXE,

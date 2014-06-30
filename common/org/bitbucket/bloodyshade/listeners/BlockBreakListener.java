@@ -16,6 +16,7 @@ import java.util.Map;
 
 import org.bitbucket.bloodyshade.PowerMining;
 import org.bitbucket.bloodyshade.lib.PowerUtils;
+import org.bitbucket.bloodyshade.lib.Reference;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -93,7 +94,6 @@ public class BlockBreakListener implements Listener {
 				else if (useExcavator = PowerUtils.validateExcavator(handItem.getType(), blockMat));
 
 				if (useHammer || useExcavator) {
-
 					// Check if player has permission to break the block
 					if (!PowerUtils.canBreak(plugin, player, e))
 						continue;
@@ -105,20 +105,21 @@ public class BlockBreakListener implements Listener {
 					}
 
 					// If there is no enchant on the item or the block is not on the effect lists, just break
-					if (enchant == null ||
-							((!PowerUtils.canSilkTouchMine(blockMat) || !PowerUtils.canFortuneMine(blockMat)) && useHammer) ||
-							((!PowerUtils.canFortuneDig(blockMat) || !PowerUtils.canFortuneDig(blockMat)) && useExcavator))
-						e.breakNaturally(handItem);
-					else {
+					if (enchant != null &&
+							((PowerUtils.canSilkTouchMine(blockMat) || PowerUtils.canFortuneMine(blockMat)) && useHammer) ||
+							((PowerUtils.canSilkTouchDig(blockMat) || PowerUtils.canFortuneDig(blockMat)) && useExcavator)) {
+
 						ItemStack drop = PowerUtils.processEnchantsAndReturnItemStack(enchant, enchantLevel, e);
 
-						if (drop != null) {
+						if (drop == null)
+							e.breakNaturally(handItem);
+						else {
 							e.getWorld().dropItemNaturally(blockLoc, drop);
 							e.setType(Material.AIR);
 						}
-						else
-							e.breakNaturally(handItem);
 					}
+					else
+						e.breakNaturally(handItem);
 
 					// If this is set, durability will be reduced from the tool for each broken block
 					if (useDurabilityPerBlock || !player.hasPermission("powermining.highdurability")) {

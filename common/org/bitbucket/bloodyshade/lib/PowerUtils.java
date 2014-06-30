@@ -91,7 +91,7 @@ public class PowerUtils {
 		return chance;
 	}
 
-	// This method returns if you can use silk-touch on the block
+	// These methods return if you can use silk-touch on the block
 	public static boolean canSilkTouchMine(Material blockType) {
 		return Reference.MINABLE_SILKTOUCH.contains(blockType);
 	}
@@ -99,13 +99,14 @@ public class PowerUtils {
 		return Reference.DIGGABLE_SILKTOUCH.contains(blockType);
 	}
 
-	// This method returns if you can use fortune on the block
+	// These methods return if you can use fortune on the block
 	public static boolean canFortuneMine(Material blockType) {
 		return Reference.MINABLE_FORTUNE.get(blockType) != null;
 	}
 	public static boolean canFortuneDig(Material blockType) {
 		return Reference.DIGGABLE_FORTUNE.get(blockType) != null;
 	}
+
 	// This method returns if the block is mineable
 	public static boolean isMineable(Material blockType) {
 		return Reference.MINABLE.containsKey(blockType);
@@ -116,7 +117,7 @@ public class PowerUtils {
 		return Reference.DIGGABLE.contains(blockType);
 	}
 
-	// This method will process the enchantment information and apply to to create the appropriate drop
+	// This method will process the enchantment information and apply it to create the appropriate drop
 	public static ItemStack processEnchantsAndReturnItemStack(Enchantment enchant, int enchantLevel, Block block) {
 		Material blockType = block.getType();
 		ItemStack drop = null;
